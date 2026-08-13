@@ -13,7 +13,7 @@ speed_fines = { #specifies the fines you get for each speeding limit
 speeding_records = [
     {"driver": "John Smith", "licence":"AB123456","limit":50,"speed":68 }
 ]
-
+using_program = True
 
 def add_to_record(driver,licence,limit,speed):
     '''adds a driver to the record'''
@@ -27,30 +27,35 @@ def add_to_record(driver,licence,limit,speed):
 def valid_name(name):
     '''checks if name is valid'''
     # strips spaces
-    name = name.strip()
-    if name.isalpha():
+    n_space_name = name.replace(" ","")
+    if n_space_name.isalpha():
         print("name added successfully")
         return True
     else:
-        print("Name can't be blank or have non alphabate characters")
+        print("Name can't be blank or have non alphabet characters")
         return False
 
 def licence_valid(licence):
     '''Checks if the licence is valid '''
-    licence_length = len(licence) # gets length of licence
-    for i in range(0,licence_length):
-        #checks if the letter is to be a alphabate or number
-        #and check it with the user's licence
-        if licence_char[i] == "a":
-            if not licence[i].isalpha():
-                print(f"Character {i+1} must be a alphabet ")
-                return False
-        elif licence_char[i] == "n":
-            if not licence[i].isdigit():
-                print(f"Character {i+1} must be a number ")
-                return False
-    print("Pass checks licence has been added")
-    return True
+    licence_length = len(licence) # gets length of licence that was inputed
+    licence.replace(" ","") # removes spaces
+    if licence_length == licence_correct_length:
+        for i in range(0,licence_length):
+            #checks if the letter is to be a alphabate or number
+            #and check it with the user's licence
+            if licence_char[i] == "a":
+                if not licence[i].isalpha():
+                    print(f"Character {i+1} must be a alphabet ")
+                    return False
+            elif licence_char[i] == "n":
+                if not licence[i].isdigit():
+                    print(f"Character {i+1} must be a number ")
+                    return False
+        print("Pass checks licence has been added")
+        return True
+    else:
+        print(f"licence must be {licence_correct_length} characters long")
+        return False
 
 
 def speed_valid(speed):
@@ -84,34 +89,52 @@ def create_record():
 
     #Gets the driver licence 
     driver_licence = input("Input driver licence: ")
-    # if licence isn't valid asks the user to input the licence correctly until they do
+    # if licence isn't valid a
+    # sks the user to input the licence correctly until they do
     while not licence_valid(driver_licence):
         driver_licence = input("Please input driver name correctly: ")
 
 
     #Gets the speed_limit
     
-    speed_limit = ""
+    try:
+        speed_limit = int(input("Input speed limit: "))
+    except: 
+        print("Only input numbers")
     # if name isn't valid asks the user to input the name correctly until they do
-    while not valid_input or not speed_valid(speed_limit):
+    while not speed_valid(speed_limit):
         
         try:
-            speed_limit = int(input("Input speed limit: "))
-            valid_input = True
+            speed_limit = int(input("Input speed limit correctly: "))
         except: 
             print("Only input numbers")
 
-   
 
-for i in range(0,120): print(f"{i}{speed_valid(i)}")
+    driver_speed = 0
+    while driver_speed < speed_limit:
+        try:
+            driver_speed = int(input("Input driver speed: "))
+            if driver_speed < speed_limit:
+                print("no speeding offence has occured in this speed input a correct speed")
+        except: 
+            print("Only input numbers")
 
-create_record()
 
+    add_to_record(driver_name,driver_licence,speed_limit,driver_speed)
+    
 
+def simple_print_record():
+    '''prints a simple unformated list of records for testing'''
+    for i in speeding_records:
+        print(i)
 
-while True:
-    licence_valid(input())
+# main loop
+
+while using_program:
+    create_record()
+    simple_print_record()
 
 
 #testing for loop storage
 #for i in range(-100,100): print(f"{i}:{cal_speed_fine(i,0)}")
+#for i in range(0,120): print(f"{i}{speed_valid(i)}")
