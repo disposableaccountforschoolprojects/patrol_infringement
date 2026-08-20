@@ -29,9 +29,29 @@ wanted_list = [
 def warrent_check(name):
     '''checks the name in the wanted list and creates a warning if it is in it'''
     if name in wanted_list:
-        pass
-
+        print("*********************************")
+        print("  •   •     ••••• ••••  •••••")
+        print(" • •  •     •     •   •   •")
+        print("••••• •     ••••  ••••    •")
+        print("•   • •     •     •  •    •")
+        print("•   • ••••• ••••• •   •   •")
+        print("*********************************")
+        print(f"Driver '{name}' is a wanted person")
+        print("*********************************")
     
+
+def print_record(driver,licence,limit,speed):
+    '''gets data and prints out a single record'''
+    #calcuates varibles like over limit and fine to reduce amount of parameters 
+    over_limit = speed-limit
+    fine = cal_speed_fine(speed,limit)
+    #prints the record
+    print(f"driver name:                {driver}")
+    print(f"driver licence:             {licence}")
+    print(f"posted speed limit:         {limit}")
+    print(f"driver speed :              {speed}")
+    print(f"Speed over the speed limit: {over_limit}")
+    print(f"Fine:                      ${fine}")
 
 
 def add_to_record(driver,licence,limit,speed):
@@ -143,12 +163,8 @@ def create_record():
     driver_name = driver_name.strip().title() # formats the driver name to be in title case and removes excess spaces.
     add_to_record(driver_name,driver_licence,speed_limit,driver_speed)
     print("")
-    print(f"driver name:                {driver_name}")
-    print(f"driver licence:             {driver_licence}")
-    print(f"posted speed limit:         {speed_limit}")
-    print(f"driver speed :              {driver_speed}")
-    print(f"Speed over the speed limit: {driver_speed-speed_limit}")
-    print(f"Fine:                       ${cal_speed_fine(driver_speed,speed_limit)}")
+    print_record(driver_name,driver_licence,speed_limit,driver_speed)
+    warrent_check(driver_name)
     print("-------------------------------")
     
 
@@ -167,15 +183,8 @@ def print_all_record():
         licence = i["licence"]
         limit = i["limit"]
         speed = i["speed"]
-        over_limit = speed-limit
-        fine = cal_speed_fine(speed,limit)
         # prints all records
-        print(f"driver name:                {driver}")
-        print(f"driver licence:             {licence}")
-        print(f"posted speed limit:         {limit}")
-        print(f"driver speed :              {speed}")
-        print(f"Speed over the speed limit: {over_limit}")
-        print(f"Fine:                      ${fine}")
+        print_record(driver,licence,limit,speed)
         print("-------------------------------")
 
 
