@@ -51,7 +51,7 @@ def print_record(driver,licence,limit,speed):
     print(f"posted speed limit:         {limit}")
     print(f"driver speed :              {speed}")
     print(f"Speed over the speed limit: {over_limit}")
-    print(f"Fine:                      ${fine}")
+    print(f"Fine:                       ${fine}")
 
 
 def add_to_record(driver,licence,limit,speed):
@@ -90,7 +90,7 @@ def licence_valid(licence):
                 if not licence[i].isdigit():
                     print(f"Character {i+1} must be a number ")
                     return False
-        print("Pass checks licence has been added")
+        print("Pass checks licence is valid")
         return True
     else:
         print(f"licence must be {licence_correct_length} characters long")
@@ -161,6 +161,7 @@ def create_record():
             print("Only input numbers")
 
     driver_name = driver_name.strip().title() # formats the driver name to be in title case and removes excess spaces.
+    driver_licence = driver_licence.upper()
     add_to_record(driver_name,driver_licence,speed_limit,driver_speed)
     print("")
     print_record(driver_name,driver_licence,speed_limit,driver_speed)
@@ -228,6 +229,66 @@ def display_summary():
     print("-------------------------------")
         
 
+def find_record_number(type,record):
+    '''gets a record based on the type and returns the order on the list that the record is in'''
+    for i in speeding_records:
+        if i[type] == record:
+           return i
+    return False
+
+
+
+def search_records():
+    '''search records for a name or licence and prints it out'''
+    print("-------------------------------")
+    searhing = True
+    while searhing:
+        print("What option do you want")
+        print("1 : licence search")
+        print("2 : Full name search")
+        type_of_search = input("Your option: ")
+        if type_of_search == "1":
+            record_input = input("Input their licence: ")
+            while not licence_valid(record_input):
+               record_input = input("Input their licence correctly: ") 
+            record_input = record_input.upper()
+            record_numb = find_record_number("licence",record_input)
+            if not record_numb:
+                print("record not found")
+            else:
+                driver = record_numb["driver"]
+                licence = record_numb["licence"]
+                limit = record_numb["limit"]
+                speed = record_numb["speed"]
+                print("-------------------------------")
+                print_record(driver,licence,limit,speed)
+                print("-------------------------------")
+            searhing = False
+            
+
+            
+
+        elif type_of_search == "2":
+            record_input = input("Input their full name: ")
+            find_record_number("driver",record_input)
+            record_input = record_input.title()
+            record_numb = find_record_number("driver",record_input)
+            
+            if not record_numb:
+                print("record not found")
+            else:
+                driver = record_numb["driver"]
+                licence = record_numb["licence"]
+                limit = record_numb["limit"]
+                speed = record_numb["speed"]
+                print("-------------------------------")
+                print_record(driver,licence,limit,speed)
+                print("-------------------------------")
+            searhing = False
+
+        else: 
+            print("invalid option input 1 or 2 ")
+
 
 # main loop
 while using_program:
@@ -243,7 +304,7 @@ while using_program:
     elif user_input == "2":
         print_all_record()
     elif user_input == "3":
-        pass
+        search_records()
     elif user_input == "4":
         display_summary()
     elif user_input == "5":
