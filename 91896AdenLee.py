@@ -3,8 +3,11 @@ import statistics
 licence_char = "aannnnnn" #characters of the licence a = letter n = numbers
 licence_correct_length = len(licence_char) #gets length of licence_char to find the length licence plate should be 
 speed_brackets = [30,110] #range of valid speed limts
-using_program = True
-
+using_program = True #for checking that user is still using program
+TABLE_MIN_LENGTH_UNITS = 16 #specifies the length of a cell in the table
+#values that are going to be put on the header of a table
+header_row = ["Driver","Licence","Limit (km/h)","Speed (km/h)","Over Limit (km/h)","Fine ($)",]
+cell_length = TABLE_MIN_LENGTH_UNITS+1 # specifies the length of a single cell
 speed_fines = { #specifies the fines you get for each speeding limit
     30:[1,10],
     80:[11,20],
@@ -14,10 +17,13 @@ speed_fines = { #specifies the fines you get for each speeding limit
 
 }
 
+#the speeding record database
 speeding_records = [
-    {"driver": "John Smith", "licence":"AB123456","limit":50,"speed":68 }
+    {"driver": "John Smith", "licence":"AB123456","limit":50,"speed":68 },
+    {"driver": "Timmy Johnes", "licence":"SS676767","limit":32,"speed":67 }
 ]
 
+#the list of wanted people
 wanted_list = [
     "Dummy Egg",
     "Wanted Person",
@@ -39,19 +45,34 @@ def warrent_check(name):
         print(f"Driver '{name}' is a wanted person")
         print("*********************************")
     
+def print_header():
+    '''prints the header of the data for tables'''
+    print("|".join(f"{str(unit):>{TABLE_MIN_LENGTH_UNITS}}" for unit in header_row))
+    print(cell_length*6*"-")
+
 
 def print_record(driver,licence,limit,speed):
     '''gets data and prints out a single record'''
     #calcuates varibles like over limit and fine to reduce amount of parameters 
     over_limit = speed-limit
     fine = cal_speed_fine(speed,limit)
-    #prints the record
-    print(f"driver name:                {driver}")
-    print(f"driver licence:             {licence}")
-    print(f"posted speed limit:         {limit}")
-    print(f"driver speed :              {speed}")
-    print(f"Speed over the speed limit: {over_limit}")
-    print(f"Fine:                       ${fine}")
+    
+    single_record = [] #list for data to be printed into a table
+    
+    
+    
+    #formats the records into a list for printing into a table
+    single_record.append(driver)
+    single_record.append(licence)
+    single_record.append(limit)
+    single_record.append(speed)
+    single_record.append(over_limit)
+    single_record.append(fine)
+
+    #prints the record in a table format
+    print("|".join(f"{str(unit):>{TABLE_MIN_LENGTH_UNITS}}" for unit in single_record))
+    #prints a divider so it's easier to see the cells
+    print(cell_length*6*"-")
 
 
 def add_to_record(driver,licence,limit,speed):
@@ -99,6 +120,7 @@ def licence_valid(licence):
 
 def speed_valid(speed):
     '''checks if speed is a valid range and returns true or false'''
+    #checks the speed in the speeing brackets list
     if speed in range(speed_brackets[0],speed_brackets[1]+1):
         print("speed success added")
         return True
@@ -143,7 +165,7 @@ def create_record():
         print("Only input numbers")
     # if name isn't valid asks the user to input the name correctly until they do
     while not speed_valid(speed_limit):
-        
+        #try to prevent int errors when the user inputs a string
         try:
             speed_limit = int(input("Input speed limit correctly: "))
         except: 
@@ -153,6 +175,7 @@ def create_record():
     driver_speed = 0
     # checks if the driver is above the speed limit and rejects the request if it isn't
     while driver_speed < speed_limit:
+        #try to prevent int errors when the user inputs a string
         try:
             driver_speed = int(input("Input driver speed: "))
             if driver_speed <= speed_limit:
@@ -161,12 +184,15 @@ def create_record():
             print("Only input numbers")
 
     driver_name = driver_name.strip().title() # formats the driver name to be in title case and removes excess spaces.
-    driver_licence = driver_licence.upper()
+    driver_licence = driver_licence.upper() # formats the driver licence to be in full uppercase
+    #adds the record to the database
     add_to_record(driver_name,driver_licence,speed_limit,driver_speed)
     print("")
+    #prints the record
+    print_header()
     print_record(driver_name,driver_licence,speed_limit,driver_speed)
+    #checks the driver name for a wanted list and warns the driver if it is
     warrent_check(driver_name)
-    print("-------------------------------")
     
 
 def simple_print_record():
@@ -176,7 +202,10 @@ def simple_print_record():
 
 def print_all_record():
     '''prints a formated list of all records'''
-    print("-------------------------------")
+    print(" ")
+    #prints the header for the records
+    #outside of for loop to prevent printing multiple times
+    print_header()
     #for loop to run through all the records
     for i in speeding_records:
         #stores driver info in varible to avoid f string error
@@ -186,7 +215,6 @@ def print_all_record():
         speed = i["speed"]
         # prints all records
         print_record(driver,licence,limit,speed)
-        print("-------------------------------")
 
 
 def display_summary():
@@ -241,18 +269,27 @@ def find_record_number(type,record):
 def search_records():
     '''search records for a name or licence and prints it out'''
     print("-------------------------------")
-    searhing = True
+    searhing = True #varibles to check user is still searching
+    #while loop to get user to input valid data
     while searhing:
+        #asks the user what data they want to search for
         print("What option do you want")
         print("1 : licence search")
         print("2 : Full name search")
+        #collects the input
         type_of_search = input("Your option: ")
-        if type_of_search == "1":
+        
+        if type_of_search == "1": #searching for licence
+            #gets the licence
             record_input = input("Input their licence: ")
+            #forces the user to input a correct licence if it's wrong
             while not licence_valid(record_input):
                record_input = input("Input their licence correctly: ") 
+            #formats the record to be in full uppercase before trying to find it
             record_input = record_input.upper()
             record_numb = find_record_number("licence",record_input)
+
+            #prints the results if found if not found if it isn't found 
             if not record_numb:
                 print("record not found")
             else:
@@ -260,20 +297,19 @@ def search_records():
                 licence = record_numb["licence"]
                 limit = record_numb["limit"]
                 speed = record_numb["speed"]
-                print("-------------------------------")
+                print_header()
                 print_record(driver,licence,limit,speed)
-                print("-------------------------------")
             searhing = False
-            
 
-            
-
-        elif type_of_search == "2":
+        elif type_of_search == "2": #searching for full name
+            #gets the full name
             record_input = input("Input their full name: ")
             find_record_number("driver",record_input)
+            #formats the record into title case before trying to find it
             record_input = record_input.title()
             record_numb = find_record_number("driver",record_input)
             
+            #prints the results if found if not found if it isn't found 
             if not record_numb:
                 print("record not found")
             else:
@@ -281,24 +317,27 @@ def search_records():
                 licence = record_numb["licence"]
                 limit = record_numb["limit"]
                 speed = record_numb["speed"]
-                print("-------------------------------")
+                print_header()
                 print_record(driver,licence,limit,speed)
-                print("-------------------------------")
             searhing = False
 
         else: 
+            #handles invalid options
             print("invalid option input 1 or 2 ")
 
 
 # main loop
 while using_program:
+    #prints the main menu of options
     print("Main menu:")
     print("1: create a new record")
     print("2: view all records")
     print("3: search offence records")
     print("4: display patrol summary")
     print("5: Exit program")
+    #gets the user input
     user_input = input("Option picked: ")
+    # go to the user input and output invalid input if invalid
     if user_input == "1":
         create_record()
     elif user_input == "2":
