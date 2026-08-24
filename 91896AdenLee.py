@@ -155,26 +155,25 @@ def create_record():
     # if licence isn't valid a
     # sks the user to input the licence correctly until they do
     while not licence_valid(driver_licence):
-        driver_licence = input("Please input driver name correctly: ")
+        driver_licence = input("Please input driver licence correctly: ")
 
     print("")
-    #Gets the speed_limit
-    try:
-        speed_limit = int(input(f"Input speed limit {speed_brackets[0]} and {speed_brackets[1]}: "))
-    except: 
-        print("Only input numbers")
+
+    valid_speed = False
     # if name isn't valid asks the user to input the name correctly until they do
-    while not speed_valid(speed_limit):
+    while not valid_speed:
         #try to prevent int errors when the user inputs a string
         try:
-            speed_limit = int(input("Input speed limit correctly: "))
+            speed_limit = int(input(f"Input speed limit {speed_brackets[0]} and {speed_brackets[1]}: "))
+            if speed_valid(speed_limit):
+                valid_speed = True
         except: 
             print("Only input numbers")
 
     print("")
     driver_speed = 0
     # checks if the driver is above the speed limit and rejects the request if it isn't
-    while driver_speed < speed_limit:
+    while driver_speed <= speed_limit:
         #try to prevent int errors when the user inputs a string
         try:
             driver_speed = int(input("Input driver speed: "))
