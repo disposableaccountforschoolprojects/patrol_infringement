@@ -106,15 +106,23 @@ def licence_valid(licence):
             if licence_char[i] == "a":
                 if not licence[i].isalpha():
                     print(f"Character {i+1} must be a alphabet ")
+                    print(f"licence must be in {licence_char} format ")
+                    print(f"where 'a' stands for alpha and 'n' for number")
+                    print(" ")
                     return False
             elif licence_char[i] == "n":
                 if not licence[i].isdigit():
                     print(f"Character {i+1} must be a number ")
+                    print(f"licence must be in {licence_char} format ")
+                    print(f"where 'a' stands for alpha and 'n' for number")
+                    print(" ")
                     return False
         print("Pass checks licence is valid")
+        print(" ")
         return True
     else:
         print(f"licence must be {licence_correct_length} characters long")
+        print(" ")
         return False
 
 
@@ -243,7 +251,6 @@ def display_summary():
             highest_offence_person = i["driver"]
             highest_offence_speed = over_limit
 
-    print(over_speed)
     # collecting varibles for printing the patrol summary
     avg_speed = statistics.mean(over_speed)
     #prints summary
@@ -328,12 +335,16 @@ def search_records():
 # main loop
 while using_program:
     #prints the main menu of options
+    print(" ")
+    print("-------------------------------")
+    print(" ")
     print("Main menu:")
     print("1: create a new record")
     print("2: view all records")
     print("3: search offence records")
     print("4: display patrol summary")
     print("5: Exit program")
+    print(" ")
     #gets the user input
     user_input = input("Option picked: ")
     # go to the user input and output invalid input if invalid
@@ -347,10 +358,12 @@ while using_program:
         display_summary()
     elif user_input == "5":
         using_program = False
+        print(" ")
         print("*********")
         print("Good bye")
         print("*********")
     else:
+        print(" ")
         print("invalid input")
     
 
