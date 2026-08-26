@@ -88,6 +88,7 @@ def valid_name(name):
     '''checks if name is valid'''
     # strips spaces
     n_space_name = name.replace(" ","")
+    #checks if name is fully alphabet and doesn't have numbers
     if n_space_name.isalpha():
         print("name added successfully")
         return True
@@ -105,6 +106,7 @@ def licence_valid(licence):
             #and check it with the user's licence
             if licence_char[i] == "a":
                 if not licence[i].isalpha():
+                    #tells the user what type of character should that one be and gives the format
                     print(f"Character {i+1} must be a alphabet ")
                     print(f"licence must be in {licence_char} format ")
                     print(f"where 'a' stands for alpha and 'n' for number")
@@ -112,6 +114,7 @@ def licence_valid(licence):
                     return False
             elif licence_char[i] == "n":
                 if not licence[i].isdigit():
+                    #tells the user what type of character should that one be and gives the format
                     print(f"Character {i+1} must be a number ")
                     print(f"licence must be in {licence_char} format ")
                     print(f"where 'a' stands for alpha and 'n' for number")
@@ -133,6 +136,7 @@ def speed_valid(speed):
         print("speed success added")
         return True
     else:
+        #tells the user what speed the speed must be in
         print(f"speed must be in between {speed_brackets[0]} and {speed_brackets[1]} ")
         return False
 
@@ -234,6 +238,7 @@ def display_summary():
     highest_offence_speed = 0
     over_speed = []
     for i in speeding_records:
+        #stores speed and limit, and overspeed in varibles for easier use
         limit = i["limit"]
         speed = i["speed"]
         over_limit = speed-limit
@@ -252,7 +257,7 @@ def display_summary():
             highest_offence_speed = over_limit
 
     # collecting varibles for printing the patrol summary
-    avg_speed = statistics.mean(over_speed)
+    avg_speed = statistics.mean(over_speed) #gets avg of speed
     #prints summary
     print("PATROL SUMMARY")
     print("")
@@ -265,12 +270,28 @@ def display_summary():
 
 def find_record_number(type,record):
     '''gets a record based on the type and returns the order on the list that the record is in'''
+    #loops through speeding records to a record
+    #if they find it
+    list_of_same_records = []
     for i in speeding_records:
         if i[type] == record:
-           return i
-    return False
+           list_of_same_records.append(i)
+    return list_of_same_records
 
 
+def print_searched_records(list_records):
+    '''prints all the searched records for search records function'''
+    #prints the results if found if not found if it isn't found 
+    if len(list_records) == 0:
+        print("record not found")
+    else:
+        print_header()
+        for i in list_records:
+            driver = i["driver"]
+            licence = i["licence"]
+            limit = i["limit"]
+            speed = i["speed"]
+            print_record(driver,licence,limit,speed)
 
 def search_records():
     '''search records for a name or licence and prints it out'''
@@ -296,15 +317,7 @@ def search_records():
             record_numb = find_record_number("licence",record_input)
 
             #prints the results if found if not found if it isn't found 
-            if not record_numb:
-                print("record not found")
-            else:
-                driver = record_numb["driver"]
-                licence = record_numb["licence"]
-                limit = record_numb["limit"]
-                speed = record_numb["speed"]
-                print_header()
-                print_record(driver,licence,limit,speed)
+            print_searched_records(record_numb)
             searhing = False
 
         elif type_of_search == "2": #searching for full name
@@ -316,15 +329,7 @@ def search_records():
             record_numb = find_record_number("driver",record_input)
             
             #prints the results if found if not found if it isn't found 
-            if not record_numb:
-                print("record not found")
-            else:
-                driver = record_numb["driver"]
-                licence = record_numb["licence"]
-                limit = record_numb["limit"]
-                speed = record_numb["speed"]
-                print_header()
-                print_record(driver,licence,limit,speed)
+            print_searched_records(record_numb)
             searhing = False
 
         else: 
@@ -332,7 +337,12 @@ def search_records():
             print("invalid option input 1 or 2 ")
 
 
+#-----------------------------------------------
+#-----------------------------------------------
 # main loop
+#-----------------------------------------------
+#-----------------------------------------------
+            
 while using_program:
     #prints the main menu of options
     print(" ")
