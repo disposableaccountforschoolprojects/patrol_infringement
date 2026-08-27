@@ -1,4 +1,5 @@
 import string
+import hashlib
 import statistics
 licence_char = "aannnnnn" #characters of the licence a = letter n = numbers
 licence_correct_length = len(licence_char) #gets length of licence_char to find the length licence plate should be 
@@ -14,8 +15,16 @@ speed_fines = { #specifies the fines you get for each speeding limit
     170:[21,30],
     400:[31,40],
     620:[41,999999999999],
-
 }
+
+#below is a hash of the password: testingpassword
+#NOTE COMMENT ABOVE WOULD NOT BE SHOWN IF THIS WAS A REAL PROGRAM HOWEVER
+#SINCE THIS IS FOR SCHOOL THE PASSWORD IS ADDED SO THE MARKER KNOWS HOW TO ENTER THE
+#DATABASE INSTEAD OF BEING STUCK.
+#this is hashed so a criminal inspecting the code can't easily find the password
+#hash is in sha 256
+database_password = "9cf7d77d7bec9aa0ad492029e667720b5cc18c1eff1928a145ba6d96c5e7530a"
+incorrect_password = True
 
 #the speeding record database
 speeding_records = [
@@ -337,12 +346,49 @@ def search_records():
             print("invalid option input 1 or 2 ")
 
 
+#
+def password_check(password):
+    '''checks if password is correct'''
+
+    #hashes the password inpute
+    hashed_userpass = hashlib.sha256(password.encode('utf-8')) 
+    #converts the hash into human readable characters 
+    text_hahsed_userpass = hashed_userpass.hexdigest()
+
+    if text_hahsed_userpass == database_password:
+        return True
+    else:
+        return False
+
+
+
+
 #-----------------------------------------------
 #-----------------------------------------------
 # main loop
 #-----------------------------------------------
 #-----------------------------------------------
-            
+
+#only allows the user pass if they get the password
+print("-------------------------------")
+while incorrect_password:
+    #user input password
+    
+    print("")
+    user_input_pass = input("Input database password: ")
+    print("")
+    #
+    if password_check(user_input_pass):
+        incorrect_password = False
+        print("Password is correct")
+        print("letting you in")
+    else:
+        print("Password is incorrect")
+    print("")
+    
+print("-------------------------------")
+        
+# main program after password
 while using_program:
     #prints the main menu of options
     print(" ")
