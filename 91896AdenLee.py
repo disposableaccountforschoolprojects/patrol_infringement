@@ -312,8 +312,10 @@ def search_records():
         print("What option do you want")
         print("1 : licence search")
         print("2 : Full name search")
+        print(" ")
         #collects the input
         type_of_search = input("Your option: ")
+        print(" ")
         
         if type_of_search == "1": #searching for licence
             #gets the licence
